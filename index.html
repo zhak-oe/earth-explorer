@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>奇特地貌发现器 · 地球探索实验室</title>
+<style>
+:root{--bg:#f4f6f2;--ink:#17231e;--muted:#64736a;--green:#1e6b50;--line:#dce4dc;--card:#fff;--sand:#e9c994}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{padding:20px clamp(18px,5vw,64px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:#f9faf7;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.4px}.logo{width:36px;height:36px;border-radius:12px;background:var(--green);display:grid;place-items:center;color:white;font-size:20px}
+nav{display:flex;gap:18px;color:var(--muted);font-size:14px}.navbtn{border:0;background:none;color:inherit;cursor:pointer;font:inherit}
+.hero{padding:54px clamp(18px,5vw,64px) 34px;background:radial-gradient(ellipse at 80% 0%,#d9e7d8 0,transparent 42%),linear-gradient(135deg,#f9faf7,#edf2e9)}
+.eyebrow{color:var(--green);font-size:12px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase}
+h1{font-size:clamp(34px,5vw,58px);line-height:1.05;letter-spacing:-2px;margin:13px 0 14px;max-width:760px}
+.hero p{max-width:620px;color:#59675e;line-height:1.7;margin:0 0 24px}
+.searchrow{display:flex;gap:10px;max-width:720px}.searchrow input{flex:1;min-width:0;border:1px solid #d5ded4;border-radius:14px;padding:15px 16px;font-size:15px;background:white;outline:none}.searchrow input:focus{border-color:var(--green)}.primary{border:0;border-radius:13px;background:var(--green);color:white;padding:0 20px;font-weight:700;cursor:pointer}.primary:hover{background:#15563f}
+main{padding:30px clamp(18px,5vw,64px) 60px;max-width:1500px;margin:auto}
+.topline{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:18px}.topline h2{margin:0;font-size:23px;letter-spacing:-.6px}.sub{font-size:13px;color:var(--muted);margin-top:6px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 24px}.chip{border:1px solid var(--line);background:white;color:#536158;padding:9px 14px;border-radius:999px;cursor:pointer;font-size:13px}.chip.active{background:#183e30;color:white;border-color:#183e30}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.card{background:var(--card);border:1px solid #e1e7e0;border-radius:20px;overflow:hidden;transition:transform .18s,box-shadow .18s}.card:hover{transform:translateY(-3px);box-shadow:0 12px 30px #1a342010}
+.art{height:190px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.art:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#10251d33,transparent 65%)}
+.art svg{width:100%;height:100%;position:absolute;inset:0}
+.tag{position:absolute;z-index:1;left:14px;top:14px;border-radius:99px;background:#ffffffdf;padding:6px 10px;font-size:11px;font-weight:700;color:#244b3a}
+.fav{position:absolute;z-index:2;right:12px;top:12px;border:0;width:34px;height:34px;border-radius:50%;background:#ffffffdf;font-size:18px;cursor:pointer;color:#6b776e}
+.fav.saved{color:#bb4a47}
+.cardbody{padding:17px 18px 18px}.place{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.4px}.card h3{font-size:19px;margin:7px 0 8px;letter-spacing:-.3px}.desc{font-size:13px;line-height:1.65;color:#647168;min-height:42px}.cardfoot{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:13px;border-top:1px solid #edf0ec}.type{font-size:11px;color:#52705d}.details{border:0;background:none;color:var(--green);font-weight:800;cursor:pointer;font-size:13px}
+.empty{padding:40px;text-align:center;color:var(--muted);grid-column:1/-1}
+.note{margin-top:26px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:#ffffff90;color:#66736a;font-size:12px;line-height:1.7}
+footer{padding:24px clamp(18px,5vw,64px);border-top:1px solid var(--line);color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.overlay{position:fixed;inset:0;background:#10251d88;display:none;align-items:center;justify-content:center;padding:18px;z-index:10}.overlay.show{display:flex}.modal{width:min(650px,100%);max-height:90vh;overflow:auto;background:white;border-radius:22px;padding:26px}.modalhead{display:flex;justify-content:space-between;gap:12px}.close{border:0;background:#edf1eb;border-radius:50%;width:34px;height:34px;font-size:20px;cursor:pointer}.modal h2{margin:7px 0 8px;font-size:28px}.modal p{line-height:1.75;color:#59685f}.fact{background:#f2f6f0;padding:14px;border-radius:12px;margin-top:12px;font-size:13px;line-height:1.7}.modal .art{border-radius:14px;height:180px;margin:18px 0}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}nav{display:none}}
+@media(max-width:580px){.grid{grid-template-columns:1fr}.art{height:210px}.searchrow{flex-direction:column}.primary{padding:14px}.hero{padding-top:40px}.topline{align-items:start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="logo">⌁</div><span>地球探索实验室</span></div><nav><button class="navbtn" id="allNav">发现地貌</button><button class="navbtn" id="favNav">我的收藏 <span id="favCount">0</span></button></nav></header>
+<section class="hero"><div class="eyebrow">EARTH · FIELD NOTES</div><h1>世界比想象中<br>更奇特。</h1><p>从太空看地球，发现那些形状惊人、成因奇妙的自然地貌。每一处风景，都是地球写下的故事。</p><div class="searchrow"><input id="search" type="search" placeholder="试试搜索：火山、沙漠、冰岛……"><button class="primary" id="searchBtn">探索地球 ↗</button></div></section>
+<main><div class="topline"><div><h2 id="sectionTitle">值得探索的地貌</h2><div class="sub" id="countText">精选地点 · 演示数据</div></div><div class="sub">第一版 · 原型体验</div></div>
+<div class="filters" id="filters"></div><section class="grid" id="grid"></section>
+<div class="note"><strong>关于这些资料：</strong>这是用于体验产品交互的原型。地点介绍为简要科普，配图为原创示意插画，并非真实卫星照片。正式发布前需要补充可核验的资料来源、真实图片及对应授权信息。</div></main>
+<footer><span>地球探索实验室 · 概念原型</span><span>探索自然，也尊重每一张图片的版权。</span></footer>
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+<script>
+const places=[
+{id:1,name:"撒哈拉之眼",en:"Richat Structure",country:"毛里塔尼亚",cat:"沙漠",kind:"环形地貌",short:"巨大的同心圆结构，像一只注视地球的眼睛。",why:"撒哈拉之眼直径约数十千米，长期以来常被称为“地球之眼”。它并非陨石坑，主要与穹隆状地质结构被侵蚀后显露有关。",fact:"观察关键词：同心圆、差异侵蚀、地层。"},
+{id:2,name:"索科特拉岛",en:"Socotra Island",country:"也门",cat:"岛屿",kind:"生物与地貌",short:"独特的岛屿生态，拥有外形奇特的龙血树。",why:"索科特拉群岛位于阿拉伯海，长期地理隔离让许多生物演化出独特形态。岛上也有石灰岩高原、洞穴和海岸地貌。",fact:"观察关键词：岛屿隔离、特有种、石灰岩。"},
+{id:3,name:"巨人堤道",en:"Giant's Causeway",country:"北爱尔兰",cat:"岩层",kind:"柱状节理",short:"数万根近似六边形的玄武岩柱伸向海边。",why:"这里的玄武岩熔岩冷却收缩，形成多边形柱状节理。柱体看起来像人工铺设，但它们是火山活动留下的自然结构。",fact:"观察关键词：玄武岩、冷却收缩、柱状节理。"},
+{id:4,name:"乌尤尼盐沼",en:"Salar de Uyuni",country:"玻利维亚",cat:"盐湖",kind:"盐沼",short:"雨季浅水形成镜面效果，天空仿佛铺在地面上。",why:"乌尤尼盐沼位于安第斯山脉高原地区，是世界著名的大型盐沼。雨季表面出现浅水时，平坦地表会产生强烈的天空倒影。",fact:"观察关键词：蒸发、盐壳、季节性浅水。"},
+{id:5,name:"纳米布沙海",en:"Namib Sand Sea",country:"纳米比亚",cat:"沙漠",kind:"沙丘",short:"橙红色沙丘沿着海岸铺展，形成巨大的波浪。",why:"纳米布沙海的沙丘受到风力搬运与沉积作用塑造。矿物氧化等因素让部分沙粒呈现红橙色，沙丘形态也会随风改变。",fact:"观察关键词：风成地貌、沙丘、沉积。"},
+{id:6,name:"张掖丹霞",en:"Zhangye Danxia",country:"中国甘肃",cat:"岩层",kind:"彩色地层",short:"红、黄、橙等色带勾勒出起伏的山体。",why:"彩色山体与不同成分的沉积岩层、地质构造和长期侵蚀有关。颜色与岩石矿物成分、氧化条件等因素相关。",fact:"观察关键词：沉积岩、地层、流水侵蚀。"},
+{id:7,name:"纳特龙湖",en:"Lake Natron",country:"坦桑尼亚",cat:"盐湖",kind:"碱性湖泊",short:"高盐、高碱的浅湖在不同季节呈现醒目色彩。",why:"纳特龙湖位于东非大裂谷地区，蒸发强烈，水体盐分与碱度较高。微生物活动和水体条件会影响湖面的颜色。",fact:"观察关键词：蒸发、碱性水体、微生物。"},
+{id:8,name:"冰岛黑沙滩",en:"Reynisfjara",country:"冰岛",cat:"海岸",kind:"火山海岸",short:"黑色沙粒、玄武岩柱与汹涌海浪构成鲜明对比。",why:"黑沙主要来自火山岩经风化、海浪冲刷后形成的碎屑。海岸附近的玄武岩柱则与熔岩冷却时的收缩有关。",fact:"观察关键词：火山岩、海蚀、柱状节理。"},
+{id:9,name:"蓝洞",en:"Great Blue Hole",country:"伯利兹",cat:"海岸",kind:"海底天坑",short:"浅色珊瑚礁环绕深蓝色近圆形海域。",why:"大蓝洞是海底大型塌陷洞穴，通常被解释为海平面较低时期形成的石灰岩洞穴系统，后来随海平面上升被海水淹没。",fact:"观察关键词：喀斯特、洞穴、海平面变化。"}
+];
+const cats=["全部","岛屿","沙漠","岩层","盐湖","海岸"];
+let active="全部",favorites=JSON.parse(localStorage.getItem("earth-favs")||"[]"),showFav=false;
+function art(id){const common=`<defs><linearGradient id="sky${id}" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dbe8d5"/><stop offset="1" stop-color="#f1dfbd"/></linearGradient></defs><rect width="600" height="320" fill="url(#sky${id})"/>`;
+const arts={
+1:`<circle cx="300" cy="160" r="150" fill="#c9a36d"/><circle cx="300" cy="160" r="124" fill="#a87f4c"/><circle cx="300" cy="160" r="100" fill="#d8bd83"/><circle cx="300" cy="160" r="75" fill="#99764f"/><circle cx="300" cy="160" r="50" fill="#cbb17d"/><circle cx="300" cy="160" r="25" fill="#8c6e4b"/>`,
+2:`<path d="M0 250 Q70 180 140 220 T280 200 T430 225 T600 190 L600 320 L0 320Z" fill="#b7a37d"/><g fill="#49745a"><path d="M120 230l-10-70 10-45 10 45-10 70M112 170l-45-25 47 10M130 180l50-38-44 22" stroke="#49745a" stroke-width="8"/><path d="M390 240l-10-75 10-40 10 40-10 75M380 180l-45-22 48 8M400 190l48-36-43 21" stroke="#49745a" stroke-width="8"/></g>`,
+3:`<path d="M0 220L40 210 65 135 90 210 115 155 140 220 165 130 190 220 215 145 240 220 265 115 290 220 315 150 340 220 365 125 390 220 415 145 440 220 465 130 490 220 515 155 540 220 565 145 600 220V320H0Z" fill="#445c50"/><path d="M0 260Q150 245 300 270T600 250V320H0Z" fill="#6e9b9b"/>`,
+4:`<rect y="160" width="600" height="160" fill="#e5d9b7"/><path d="M0 160L600 160L600 320L0 320Z" fill="#b7d4d4"/><path d="M0 180L600 180M0 220L600 220M0 260L600 260" stroke="#f7f0df" stroke-width="2" opacity=".8"/><path d="M300 160L260 320M300 160L340 320" stroke="#d2c4a2" stroke-width="2"/>`,
+5:`<path d="M0 260L110 90 225 260 360 55 500 260 570 130 600 190V320H0Z" fill="#c98245"/><path d="M0 280L140 170 255 280 390 140 520 280 600 220V320H0Z" fill="#e1a05b"/><path d="M110 90L150 150 135 145Z M360 55L410 125 388 118Z" fill="#f0d6a0"/>`,
+6:`<path d="M0 250L100 90 200 230 280 60 390 240 500 95 600 240V320H0Z" fill="#bd6551"/><path d="M0 265L100 145 200 255 280 120 390 265 500 145 600 265V320H0Z" fill="#d99c64"/><path d="M0 285L120 205 220 290 310 180 430 290 520 200 600 280V320H0Z" fill="#e7c28c"/>`,
+7:`<path d="M0 180Q150 155 300 180T600 170V320H0Z" fill="#bf9b78"/><path d="M0 205Q150 190 300 210T600 195V290Q400 270 300 290T0 290Z" fill="#b85f53"/><path d="M0 245Q180 230 300 250T600 235V320H0Z" fill="#d8ad84"/>`,
+8:`<path d="M0 205L80 130 145 220 210 135 285 225 360 130 435 220 510 125 600 210V320H0Z" fill="#34443d"/><path d="M0 250Q150 230 300 255T600 245V320H0Z" fill="#202f2d"/><path d="M0 280Q120 265 240 280T480 275T600 280V320H0Z" fill="#80a7a5"/>`,
+9:`<ellipse cx="300" cy="190" rx="190" ry="110" fill="#d1c19a"/><ellipse cx="300" cy="190" rx="145" ry="82" fill="#78b7b9"/><ellipse cx="300" cy="190" rx="95" ry="58" fill="#286f83"/><ellipse cx="300" cy="190" rx="55" ry="34" fill="#164a65"/>`
+};
+return `<svg viewBox="0 0 600 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${common}${arts[id]||arts[1]}</svg>`}
+function esc(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderFilters(){document.getElementById("filters").innerHTML=cats.map(c=>`<button class="chip ${active===c?"active":""}" data-cat="${c}">${c}</button>`).join("");document.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{active=b.dataset.cat;showFav=false;renderFilters();render()})}
+function render(){let q=document.getElementById("search").value.trim().toLowerCase();let list=places.filter(p=>(active==="全部"||p.cat===active)&&(!showFav||favorites.includes(p.id))&&(!q||(p.name+p.en+p.country+p.cat+p.short+p.why).toLowerCase().includes(q)));document.getElementById("sectionTitle").textContent=showFav?"我的收藏":"值得探索的地貌";document.getElementById("countText").textContent=`${list.length} 个地点 · 演示数据`;document.getElementById("favCount").textContent=favorites.length;document.getElementById("grid").innerHTML=list.length?list.map(p=>`<article class="card"><div class="art">${art(p.id)}<span class="tag">${p.cat}</span><button class="fav ${favorites.includes(p.id)?"saved":""}" data-fav="${p.id}" title="收藏">${favorites.includes(p.id)?"♥":"♡"}</button></div><div class="cardbody"><div class="place">${esc(p.country)} · ${esc(p.en)}</div><h3>${esc(p.name)}</h3><div class="desc">${esc(p.short)}</div><div class="cardfoot"><span class="type">${esc(p.kind)}</span><button class="details" data-detail="${p.id}">探索地点 ↗</button></div></div></article>`).join(""):`<div class="empty">暂时没有匹配的地点。试试换个关键词，或切换分类。</div>`;document.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>toggleFav(+b.dataset.fav));document.querySelectorAll("[data-detail]").forEach(b=>b.onclick=()=>detail(+b.dataset.detail))}
+function toggleFav(id){favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];localStorage.setItem("earth-favs",JSON.stringify(favorites));render()}
+function detail(id){let p=places.find(x=>x.id===id);document.getElementById("modal").innerHTML=`<div class="modalhead"><div><div class="eyebrow">${esc(p.country)} · ${esc(p.en)}</div><h2>${esc(p.name)}</h2><div class="sub">${esc(p.cat)} / ${esc(p.kind)}</div></div><button class="close" id="close">×</button></div><div class="art">${art(p.id)}</div><p>${esc(p.why)}</p><div class="fact"><strong>观察线索</strong><br>${esc(p.fact)}</div><div class="fact"><strong>资料提示</strong><br>正式资料页应补充可核验的地理资料来源和图片授权链接。当前内容为原型简介，不替代专业地理资料。</div><p><button class="primary" style="padding:12px 16px" id="modalFav">${favorites.includes(id)?"♥ 已收藏":"♡ 收藏地点"}</button></p>`;document.getElementById("overlay").classList.add("show");document.getElementById("close").onclick=closeModal;document.getElementById("modalFav").onclick=()=>{toggleFav(id);detail(id)}}
+function closeModal(){document.getElementById("overlay").classList.remove("show")}
+document.getElementById("searchBtn").onclick=()=>{showFav=false;render()};document.getElementById("search").addEventListener("keydown",e=>{if(e.key==="Enter"){showFav=false;render()}});document.getElementById("favNav").onclick=()=>{showFav=true;active="全部";renderFilters();render()};document.getElementById("allNav").onclick=()=>{showFav=false;active="全部";document.getElementById("search").value="";renderFilters();render()};document.getElementById("overlay").onclick=e=>{if(e.target.id==="overlay")closeModal()};document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});renderFilters();render();
+</script>
+</body>
+</html>
